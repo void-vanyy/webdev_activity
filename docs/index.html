@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In - WebDev Activity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Instrument Sans', system-ui, sans-serif;
+        }
+
+        @keyframes blobFloat1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -40px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+        @keyframes blobFloat2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(-25px, 15px) scale(1.08); }
+            50% { transform: translate(15px, -30px) scale(1.12); }
+            75% { transform: translate(-10px, 25px) scale(0.98); }
+        }
+        @keyframes blobFloat3 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(20px, 30px) scale(1.15); }
+        }
+
+        .bg-blobs {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(160deg, #0c0a1a 0%, #150e28 40%, #1a1032 70%, #0f0c1f 100%);
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .blob-1 {
+            width: 50vw; height: 50vw;
+            top: -10%; left: -10%;
+            background: radial-gradient(circle, #f97316 0%, #ea580c 30%, transparent 65%);
+            filter: blur(80px); opacity: 0.8;
+            animation: blobFloat1 15s ease-in-out infinite;
+        }
+        .blob-2 {
+            width: 45vw; height: 45vw;
+            top: 15%; right: -8%;
+            background: radial-gradient(circle, #22d3ee 0%, #0891b2 30%, transparent 65%);
+            filter: blur(90px); opacity: 0.75;
+            animation: blobFloat2 18s ease-in-out infinite;
+        }
+        .blob-3 {
+            width: 40vw; height: 40vw;
+            bottom: -8%; left: 8%;
+            background: radial-gradient(circle, #a855f7 0%, #7c3aed 30%, transparent 65%);
+            filter: blur(85px); opacity: 0.7;
+            animation: blobFloat3 20s ease-in-out infinite;
+        }
+        .blob-4 {
+            width: 35vw; height: 35vw;
+            top: 50%; left: 30%;
+            background: radial-gradient(circle, #e11d48 0%, #be123c 30%, transparent 65%);
+            filter: blur(75px); opacity: 0.6;
+            animation: blobFloat2 22s ease-in-out infinite reverse;
+        }
+        .blob-5 {
+            width: 30vw; height: 30vw;
+            top: 5%; left: 45%;
+            background: radial-gradient(circle, #22c55e 0%, #16a34a 30%, transparent 65%);
+            filter: blur(70px); opacity: 0.55;
+            animation: blobFloat1 17s ease-in-out infinite reverse;
+        }
+        .blob-6 {
+            width: 25vw; height: 25vw;
+            bottom: 15%; right: 12%;
+            background: radial-gradient(circle, #3b82f6 0%, #2563eb 30%, transparent 65%);
+            filter: blur(65px); opacity: 0.65;
+            animation: blobFloat3 14s ease-in-out infinite reverse;
+        }
+
+        .card-container {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(30px) saturate(1.2);
+            -webkit-backdrop-filter: blur(30px) saturate(1.2);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 1.5rem;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .card h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 1.75rem;
+            letter-spacing: 0.08em;
+            color: #1c1917;
+        }
+
+        .passkey-btn {
+            width: 100%;
+            padding: 0.8125rem 2rem;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 0.875rem;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            color: #1c1917;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .passkey-btn:hover { background: rgba(255,255,255,0.35); transform: translateY(-1px); }
+
+        .separator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.25rem 0;
+            font-size: 0.6875rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            color: #44403c;
+        }
+        .separator::before, .separator::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.2), transparent);
+        }
+
+        .form-group { margin-bottom: 1.125rem; }
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #44403c;
+            margin-bottom: 0.375rem;
+        }
+        .form-group .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .form-group .label-row a {
+            font-size: 0.8125rem;
+            color: #44403c;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .form-group input[type="email"],
+        .form-group input[type="text"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1.5px solid rgba(0,0,0,0.15);
+            border-radius: 0.875rem;
+            background: rgba(255,255,255,0.25);
+            font-size: 0.9375rem;
+            color: #1c1917;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+        .form-group input::placeholder { color: #78716c; }
+        .form-group input:hover { border-color: rgba(0,0,0,0.25); background: rgba(255,255,255,0.3); }
+        .form-group input:focus {
+            border-color: rgba(0,0,0,0.35);
+            background: rgba(255,255,255,0.35);
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        .checkbox-row input[type="checkbox"] {
+            width: 1rem; height: 1rem;
+            accent-color: #3d2b1f;
+        }
+        .checkbox-row label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #44403c;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.8125rem 2rem;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 0.875rem;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            color: #1c1917;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .submit-btn:hover { background: rgba(255,255,255,0.35); transform: translateY(-1px); }
+
+        .footer {
+            text-align: center;
+            margin-top: 1.25rem;
+            font-size: 0.8125rem;
+            color: #1c1917;
+        }
+        .footer a {
+            color: #0c0a09;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+        .nav { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 10; display: flex; gap: 1rem; }
+        .nav a {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+        }
+        .nav a:hover { color: #fff; background: rgba(255,255,255,0.15); }
+        .nav a.active { color: #fff; background: rgba(255,255,255,0.2); }
+
+        @media (max-width: 480px) {
+            .card { padding: 1.5rem; }
+            .nav { top: 1rem; right: 1rem; gap: 0.5rem; }
+            .nav a { padding: 0.4rem 0.75rem; font-size: 0.8125rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="blob blob-4"></div>
+        <div class="blob blob-5"></div>
+        <div class="blob blob-6"></div>
+    </div>
+
+    <nav class="nav">
+        <a href="index.html" class="active">Log In</a>
+        <a href="register.html">Sign Up</a>
+        <a href="forgot-password.html">Forgot Pass</a>
+    </nav>
+
+    <div class="card-container">
+        <div class="card">
+            <h1>LOG-IN</h1>
+
+            <button class="passkey-btn">&#128273; Sign in with a passkey</button>
+
+            <div class="separator">OR CONTINUE WITH EMAIL</div>
+
+            <div class="form-group">
+                <label>Email address</label>
+                <input type="email" placeholder="email@example.com">
+            </div>
+
+            <div class="form-group">
+                <div class="label-row">
+                    <label>Password</label>
+                    <a href="forgot-password.html">Forgot password?</a>
+                </div>
+                <input type="password" placeholder="Password">
+            </div>
+
+            <div class="checkbox-row">
+                <input type="checkbox" id="remember">
+                <label for="remember">Remember me</label>
+            </div>
+
+            <button class="submit-btn">Log in</button>
+
+            <div class="footer">
+                Don't have an account? <a href="register.html">Sign up</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
